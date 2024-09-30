@@ -28,7 +28,7 @@ const SplashScreen = () => {
 
         // Redireccionar después de 3 segundos
         const timeout = setTimeout(() => {
-            router.push('/login');
+            router.push('/registro');
         }, 3000);
 
         // Limpiar el timeout cuando el componente se desmonte
