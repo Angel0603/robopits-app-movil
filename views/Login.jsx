@@ -33,7 +33,7 @@ const Login = () => {
             console.log('Response:', json);
     
             if (response.status === 200) {
-                Alert.alert("Éxito", "Inicio de sesión exitoso.");
+                Alert.alert("Binevenido", "Inicio de sesión exitoso.");
             } else {
                 Alert.alert("Error", json.message || "No se pudo iniciar sesión.");
             }
