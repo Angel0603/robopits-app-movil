@@ -13,7 +13,6 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    
 
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
