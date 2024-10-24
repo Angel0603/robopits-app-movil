@@ -27,7 +27,7 @@ const Registro = () => {
             <Image source={require('../assets/logo-robopits.png')} className="w-28 h-28" />
 
             {/* Título */}
-            <Textito className="text-2xl font-bold text-[#223263]/95 mt-5" fontFamily="Poppins">
+            <Textito className="text-2xl text-[#223263]/95 mt-5" fontFamily='PoppinsBold'>
                 ¡Comencemos!
             </Textito>
 
@@ -86,7 +86,7 @@ const Registro = () => {
             <StyledPressable
                 className="w-11/12 h-14 items-center justify-center bg-[#3BA4F6] rounded-md mt-6 active:bg-[#3BA4F6]/80 active:opacity-80"
             >
-                <Textito className="text-white text-lg font-bold">
+                <Textito className="text-white text-lg" fontFamily='PoppinsBold'>
                     Registrarse
                 </Textito>
             </StyledPressable>
@@ -98,7 +98,7 @@ const Registro = () => {
                 </Textito>
                 <StyledPressable className="ml-1 active:opacity-50">
                     <Link href="/login" asChild>    
-                        <Textito className="text-[#3BA4F6] font-bold">
+                        <Textito className="text-[#3BA4F6]" fontFamily='PoppinsBold'>
                             Iniciar sesión
                         </Textito>
                     </Link>

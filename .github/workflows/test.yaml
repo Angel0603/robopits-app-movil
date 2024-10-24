@@ -1,0 +1,92 @@
+name: App móvil automatización CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - main       # El workflow se ejecutará al hacer push en la rama main
+      - develop    # El workflow se ejecutará al hacer push en la rama develop
+      - 'feature/*' # El workflow se ejecutará al hacer push en cualquier rama que siga el formato feature/*
+  pull_request:
+    branches:
+      - main       # Se ejecutará al abrir un pull request hacia la rama main
+      - develop    # Se ejecutará al abrir un pull request hacia la rama develop
+  workflow_dispatch: # Permite ejecutar el flujo de trabajo manualmente desde la interfaz de GitHub
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Set up JDK for Android
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Install Android SDK
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-11-jdk
+          yes | sdkmanager "platform-tools" "platforms;android-30"
+
+      - name: Build Android project
+        run: |
+          cd android
+          ./gradlew assembleDebug
+
+      - name: Run unit tests
+        run: npm test -- --coverage
+
+      - name: Run linter
+        run: npm run lint
+
+  ios-build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Pods
+        run: |
+          cd ios
+          pod install
+
+      - name: Build iOS project
+        run: |
+          cd ios
+          xcodebuild -workspace YourAppName.xcworkspace -scheme YourAppName -sdk iphonesimulator -configuration Debug build

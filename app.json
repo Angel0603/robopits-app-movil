@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/logo-robopits.png",
     "userInterfaceStyle": "light",
-    "scheme": "RoboPits",
+    "scheme": ["robopitsapp"],
     "splash": {
       "image": "./assets/logo-robopits.png",
       "resizeMode": "contain",
@@ -17,9 +17,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logo-robopits.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.angel06.robopitsapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -27,6 +28,11 @@
     "plugins": [
       "expo-router",
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "a61edb05-35b6-4f82-a7ee-ae7bf5213a9c"
+      }
+    }
   }
 }

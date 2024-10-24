@@ -43,7 +43,7 @@ const SplashScreen = () => {
 
     return (
         <View className="flex-1">
-            <Image source={require('../../assets/fondo-splash.png')} className="w-full h-full" />
+            {/* Imagen de fondo <Image source={require('../../assets/robosplash.png')} className="w-full h-full" />*/}
             <View className="absolute justify-center items-center w-full h-3/6">
                 <Textito className="text-5xl font-black text-black-500 pt-10" fontFamily="PoppinsBold">
                     RoboPits

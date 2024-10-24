@@ -1,63 +1,85 @@
-import { CartIcon, HeartIcon, HomeIcon, TagIcon, UserIcon } from '../../components/Icons'
+import { HeartIcon, HomeIcon, MenuIcon, PedidosIcon, TagIcon } from '../../components/Icons'
 import { Tabs } from 'expo-router'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+
+import Header from '../../components/Header';
 
 const RootLayout = () => {
     return (
-        <Tabs
-            screenOptions={{
-                headerShown: false,
-                tabBarStyle: { backgroundColor: 'white', borderTopColor: '#b0b0b0', height: 85, paddingVertical: 8, alignItems: 'center', justifyContent: 'center' },
-                tabBarActiveTintColor: '#3ba4f6',
-                tabBarLabelStyle: {
-                    fontSize: 12,
-                    fontWeight: 'bold',
-                    fontFamily: 'Poppins',
-                },
-                //headerTransparent: true, //para dejar el header transparente
-            }}
-        >
-
-            <Tabs.Screen
-                name="home"
-                options={{
-                    tabBarIcon: ({ color }) => <HomeIcon color={color} />,
-                    title: 'Home'
+        <SafeAreaProvider>
+            <Tabs
+                screenOptions={{
+                    headerShown: false,
+                    tabBarStyle: { backgroundColor: 'white', borderTopColor: '#EBF0FF', alignItems: 'center', justifyContent: 'center', paddingTop: 5, borderTopWidth: 1 },
+                    tabBarActiveTintColor: '#3ba4f6',
+                    tabBarLabelStyle: {
+                        fontSize: 14,
+                        fontWeight: 'bold',
+                        fontFamily: 'Poppins'
+                    },
+                    //headerTransparent: true, //para dejar el header transparente
                 }}
-            />
+            >
 
-            <Tabs.Screen
-                name="favoritos"
-                options={{
-                    tabBarIcon: ({ color }) => <HeartIcon color={color} />,
-                    title: 'Favoritos'
-                }}
-            />
+                <Tabs.Screen
+                    name="home"
+                    options={{
+                        headerShown: true,
+                        header: () => (
+                            <Header />
+                          ),
+                        tabBarIcon: ({ color }) => <HomeIcon color={color} />,
+                        title: 'Inicio'
+                    }}
+                />
 
-            <Tabs.Screen
-                name="carrito"
-                options={{
-                    tabBarIcon: ({ color }) => <CartIcon color={color} />,
-                    title: 'Carrito'
-                }}
-            />
+                <Tabs.Screen
+                    name="favoritos"
+                    options={{
+                        headerShown: true,
+                        header: () => (
+                            <Header />
+                          ),
+                        tabBarIcon: ({ color }) => <HeartIcon color={color} />,
+                        title: 'Favoritos'
+                    }}
+                />
 
-            <Tabs.Screen
-                name="ofertas"
-                options={{
-                    tabBarIcon: ({ color }) => <TagIcon color={color} />,
-                    title: 'Ofertas'
-                }}
-            />
+                <Tabs.Screen
+                    name="ofertas"
+                    options={{
+                        headerShown: true,
+                        header: () => (
+                            <Header />
+                          ),
+                        tabBarIcon: ({ color }) => <TagIcon color={color} />,
+                        title: 'Ofertas'
+                    }}
+                />
 
-            <Tabs.Screen
-                name="perfil"
-                options={{
-                    tabBarIcon: ({ color }) => <UserIcon color={color} />,
-                    title: 'Perfil'
-                }}
-            />
+                <Tabs.Screen
+                    name="pedidos"
+                    options={{
+                        headerShown: true,
+                        header: () => (
+                            <Header />
+                          ),
+                        tabBarIcon: ({ color }) => <PedidosIcon color={color} />,
+                        title: 'Pedidos'
+                    }}
+                />
 
-        </Tabs>
+                <Tabs.Screen
+                    name="menu"
+                    options={{
+                        tabBarIcon: ({ color }) => <MenuIcon color={color} />,
+                        title: 'Más'
+                    }}
+                />
+
+            </Tabs>
+
+        </SafeAreaProvider>
     )
 }
 

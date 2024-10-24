@@ -1,16 +1,111 @@
-import { View, Text } from 'react-native'
+import { View, Text, Pressable, ScrollView, Image } from 'react-native'
+import { styled } from 'nativewind';
+import { Link } from 'expo-router';
+import ApiService from '../lib/ApiService.js';
 
-import React from 'react'
+const StyledPressable = styled(Pressable);
+const StyledImage = styled(Image);
+
+import React, { useEffect, useState } from 'react'
 import ImageCarousel from '../components/ImageCarousel'
+import CategoriaScrollView from '../components/CategoriaScrollView.jsx';
+import ProductCard from '../components/ProductCard.jsx';
+import Textito from '../components/Textito.jsx';
 
 const Home = () => {
 
+    const [categorias, setCategorias] = useState([]);
+    const [products, setProducts] = useState([]);
+
+    const showProducts = async () => {
+        try {
+            const response = await ApiService.getInstance().fetchData('Productos');
+            setProducts(response);
+        } catch (error) {
+            console.error('Error al obtener datos:', error);
+        }
+    }
+
+    const showCategorias = async () => {
+        try {
+            const response = await ApiService.getInstance().fetchData('Categorias');
+            setCategorias(response);
+        } catch (error) {
+            console.error('Error al obtener datos:', error);
+        }
+    };
+
+    useEffect(() => {
+        showCategorias();
+        showProducts();
+    }, []);
+
     return (
-        <View className="flex-1 bg-white w-full items-center">
-            <View className="w-full">
-                <ImageCarousel />
+        <ScrollView className="flex-1 bg-white">
+            <View className="flex-1 bg-white w-full items-center">
+                <View className="w-full">
+                    <ImageCarousel />
+                </View>
+
+                <View className="flex-row w-full px-5 justify-between">
+                    <Textito className="text-lg text-[#223263]/95" fontFamily='PoppinsBold'>
+                        Categorías
+                    </Textito>
+
+                    <Link href="/categorias" asChild>
+                        <StyledPressable className="active:opacity-50">
+                            <Textito className="text-lg text-[#3ba4f6]" fontFamily='PoppinsBold'>
+                                Más categorías
+                            </Textito>
+                        </StyledPressable>
+                    </Link>
+                </View>
+
+                <CategoriaScrollView categorias={categorias} />
+
+                <View className="flex-row w-full px-5 justify-between mt-5">
+                    <Textito className="text-lg text-[#223263]/95" fontFamily='PoppinsBold'>
+                        Más vendidos
+                    </Textito>
+
+                    <StyledPressable className="active:opacity-50">
+                        <Textito className="text-lg font-bold text-[#3ba4f6]" fontFamily='PoppinsBold'>
+                            Ver más
+                        </Textito>
+                    </StyledPressable>
+                </View>
+
+                {/*Cards Productos */}
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
+                    <View className="w-full flex-row">
+                        {products.map(product => (
+                            <ProductCard key={product._id} image={product.Imagen} name={product.NameProducto} price={product.Precio.toFixed(2)} />
+                        ))}
+                    </View>
+                </ScrollView>
+
+                <View className="flex-row w-full px-5 justify-between mt-5">
+                    <Text className="text-lg font-bold text-[#223263]/95" fontFamily="Poppins">
+                        Agregados recientemente
+                    </Text>
+
+                    <StyledPressable className="active:opacity-50">
+                        <Text className="text-lg font-bold text-[#3ba4f6]" fontFamily="Poppins">
+                            Ver más
+                        </Text>
+                    </StyledPressable>
+                </View>
+
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="mb-5">
+                    <View className="w-full flex-row">
+                        {products.map(product => (
+                            <ProductCard key={product._id} image={product.Imagen} name={product.NameProducto} price={product.Precio.toFixed(2)} />
+                        ))}
+                    </View>
+                </ScrollView>
+
             </View>
-        </View>
+        </ScrollView>
     )
 }
 

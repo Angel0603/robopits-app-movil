@@ -2,7 +2,8 @@ import React from 'react';
 import { Text } from 'react-native';
 import { useFontContext } from './FontContext'; // Importa el contexto
 
-const Textito = ({ children, fontFamily = 'Poppins', style, ...props }) => {
+// Actualización para usar React.forwardRef
+const Textito = React.forwardRef(({ children, fontFamily = 'Poppins', style, ...props }, ref) => {
   const { fontsLoaded } = useFontContext(); // Accede al estado de las fuentes cargadas
 
   if (!fontsLoaded) {
@@ -10,10 +11,10 @@ const Textito = ({ children, fontFamily = 'Poppins', style, ...props }) => {
   }
 
   return (
-    <Text style={[{ fontFamily }, style]} {...props}>
+    <Text ref={ref} style={[{ fontFamily }, style]} {...props}>
       {children}
     </Text>
   );
-};
+});
 
 export default Textito;

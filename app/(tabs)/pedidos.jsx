@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const carrito = () => {
+const perfil = () => {
   return (
     <View className="flex-1 items-center justify-center bg-white">
-      <Text>carrito</Text>
+      <Text>Pedidos</Text>
     </View>
   )
 }
 
-export default carrito
+export default perfil

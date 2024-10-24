@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput } from 'react-native';
 import Textito from './Textito'; 
 
-const CustomInput = ({ placeholderText, icon: IconComponent, className = '', inputStyle = '', secureTextEntry = false }) => {
-  const [value, setValue] = useState('');
+const CustomInput = ({ placeholderText, icon: IconComponent, className = '', inputStyle = '', secureTextEntry = false, onChangeText, value }) => {
 
   return (
     <View className={`relative flex-row items-center border border-[#EBF0FF] rounded-md ${className}`}>
@@ -13,7 +12,7 @@ const CustomInput = ({ placeholderText, icon: IconComponent, className = '', inp
       {/* Campo de texto */}
       <TextInput
         value={value}
-        onChangeText={setValue}
+        onChangeText={onChangeText}
         className={`flex-1 ml-2 text-base text-black ${inputStyle}`} // Aplicar estilos a través de nativewind
         style={{
           fontFamily: 'Poppins', // Aplicar la fuente de manera fija
