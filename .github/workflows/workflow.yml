@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+      MOVIL_APP_API_URL: ${{ secrets.MOVIL_APP_API_URL }}
 
     steps:
       - name: Checkout repository
