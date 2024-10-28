@@ -1,4 +1,4 @@
-import { View, Image, Animated, Easing } from 'react-native';
+import { View, Animated, Easing } from 'react-native';
 import React, { useEffect, useRef } from 'react';
 import { useRouter } from 'expo-router';
 import Textito from '../../components/Textito';

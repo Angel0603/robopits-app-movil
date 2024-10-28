@@ -2,9 +2,7 @@ name: Movil CI/CD Workflow
 
 on:
   push:
-    branches:
-      - develop           # Pruebas internas
-      - 'feature/*'       # Ramas de características de programadores
+    branches:Serísticas de programadores
       - main              # Solo pruebas y compilación
   pull_request:
     branches:
