@@ -1,0 +1,40 @@
+name: Movil CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - develop           # Pruebas internas
+      - 'feature/*'       # Ramas de características de programadores
+      - main              # Solo pruebas y compilación
+  pull_request:
+    branches:
+      - develop           # Validación de cambios antes de fusionar en desarrollo
+      - main              # Validación de cambios antes de fusionar en producción
+  workflow_dispatch:      # Activación manual opcional
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      MOVIL_APP_API_URL: ${{ secrets.MOVIL_APP_API_URL }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm install
