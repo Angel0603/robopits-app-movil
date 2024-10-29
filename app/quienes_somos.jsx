@@ -1,11 +1,9 @@
-import { View, Text } from 'react-native'
 import React from 'react'
+import QuienesSomos from '../views/QuienesSomos'
 
 const quienes_somos = () => {
   return (
-    <View>
-      <Text>quienes_somos</Text>
-    </View>
+    <QuienesSomos/>
   )
 }
 
