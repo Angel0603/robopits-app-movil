@@ -40,7 +40,7 @@ jobs:
         run: npm install
     
   unit-test:
-    name: Run Tests
+    name: Pruebas Unitarias
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -49,3 +49,23 @@ jobs:
           node-version: "16.x"
       - run: npm install
       - run: npm run test
+    
+    name: Pruebas E2E
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+      - run: npm install
+        run: npm start &
+        env:  
+          PORT: 3000  # Cambia esto si tu aplicación usa otro puerto
+
+      - name: Wait for server to be ready
+        run: npx wait-on http://localhost:3000  # Espera hasta que el servidor esté listo antes de ejecutar Cypress
+
+      - name: Run Cypress tests
+        run: npx cypress run
+        env:
+          CYPRESS_baseUrl: http://localhost:3000  # Cambia la URL base si es necesario
