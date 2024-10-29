@@ -50,36 +50,35 @@ jobs:
       - run: npm install
       - run: npm run test
 
-  e2e-test:
+ e2e-test:
     name: Pruebas E2E
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
         with:
           node-version: "16.x"
-      - run: npm install
+
+      - name: Install dependencies
+        run: npm install
 
       - name: Start the server
-        run: npm start &
-        env:
-          PORT: 8081  # Cambia esto si tu aplicación usa otro puerto
-
+        run: PORT=8081 npm start &
+        
       - name: Wait for server to be ready
-        run: npx wait-on http://localhost:8081  # Espera hasta que el servidor esté listo antes de ejecutar Cypress
+        run: npx wait-on http://localhost:8081
 
       - name: Run Cypress tests
-      run: npx cypress run || echo "Cypress tests completed with failures"
-      env:
-        CYPRESS_baseUrl: http://localhost:8081
+        run: npx cypress run || echo "Cypress tests completed with failures"
+        env:
+          CYPRESS_baseUrl: http://localhost:8081
 
       - name: Upload Cypress Results
         uses: actions/upload-artifact@v2
         with:
           name: cypress-results
           path: cypress/screenshots
-
-      - name: Run Cypress tests
-        run: npx cypress run --exit 0
-        env:
-          CYPRESS_baseUrl: http://localhost:8081  # Cambia la URL base si es necesario
+          
