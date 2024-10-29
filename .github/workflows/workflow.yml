@@ -49,7 +49,8 @@ jobs:
           node-version: "16.x"
       - run: npm install
       - run: npm run test
-    
+
+  e2e-test:
     name: Pruebas E2E
     runs-on: ubuntu-latest
     steps:
@@ -58,8 +59,10 @@ jobs:
         with:
           node-version: "16.x"
       - run: npm install
+
+      - name: Start the server
         run: npm start &
-        env:  
+        env:
           PORT: 3000  # Cambia esto si tu aplicación usa otro puerto
 
       - name: Wait for server to be ready
