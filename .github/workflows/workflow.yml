@@ -69,18 +69,6 @@ jobs:
         run: npx wait-on http://localhost:8081  # Espera hasta que el servidor esté listo antes de ejecutar Cypress
 
       - name: Run Cypress tests
-      run: |
-        npx cypress run || echo "Cypress tests completed with failures"
-      env:
-        CYPRESS_baseUrl: http://localhost:8081
-
-      - name: Upload Cypress Results
-        uses: actions/upload-artifact@v2
-        with:
-          name: cypress-results
-          path: cypress/screenshots
-
-      - name: Run Cypress tests
-        run: npx cypress run --exit 0
+        run: npx cypress run
         env:
           CYPRESS_baseUrl: http://localhost:8081  # Cambia la URL base si es necesario
