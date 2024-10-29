@@ -69,8 +69,7 @@ jobs:
         run: npx wait-on http://localhost:8081  # Espera hasta que el servidor esté listo antes de ejecutar Cypress
 
       - name: Run Cypress tests
-      run: |
-        npx cypress run || echo "Cypress tests completed with failures"
+      run: npx cypress run || echo "Cypress tests completed with failures"
       env:
         CYPRESS_baseUrl: http://localhost:8081
 
