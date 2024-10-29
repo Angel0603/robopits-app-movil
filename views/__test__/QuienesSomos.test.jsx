@@ -1,9 +1,16 @@
-import { render } from '@testing-library/react-native';
-
+import React from 'react';
 import QuienesSomos from '../QuienesSomos';
+import renderer from "react-test-renderer";
 
+describe("QuienesSomos", () => {
+  it("has 1 child", () => {
+    const tree = renderer.create(<QuienesSomos />).toJSON();
+    expect(tree.children.length).toBe(1);
+  });
 
-test('debe mostrar el mensaje "Quiénes Somos"', () => {
-    const { getByText } = render(<QuienesSomos />);
-    expect(getByText('Quiénes Somos')).toBeTruthy();
+  it("Renderizado correcto", () => {
+    const tree = renderer.create(<QuienesSomos />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });
+

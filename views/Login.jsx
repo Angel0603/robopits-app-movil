@@ -19,7 +19,7 @@ const Login = () => {
     };
 
     const handleLogin = async () => {
-        console.log('Attempting login with:', email, password); // This should show the entered values
+        console.log('Attempting login with:', 'Email: ' + email, 'Password: ' + password); // This should show the entered values
     
         try {
             const response = await fetch('https://back-end-robopits.vercel.app/api/login', {
