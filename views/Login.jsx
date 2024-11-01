@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Image, Pressable, Alert, AsyncStorage } from 'react-native';
+import { View, Image, Pressable, Alert } from 'react-native';
 import { EmailIcon, PasswordIcon, EyeIcon, EyeOffIcon } from '../components/Icons';
 import { styled } from 'nativewind';
-import { Link } from 'expo-router';
-
+import { Link, useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ApiService from '../lib/ApiService'; // Importa tu servicio API para manejar las peticiones
 import CustomInput from '../components/CustomInput';
 import Textito from '../components/Textito';
 
@@ -13,6 +14,7 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const router = useRouter();  // Hook para la navegación
 
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
@@ -20,29 +22,34 @@ const Login = () => {
 
     const handleLogin = async () => {
         console.log('Attempting login with:', 'Email: ' + email, 'Password: ' + password); // This should show the entered values
-    
+
         try {
-            const response = await fetch('https://back-end-robopits.vercel.app/api/login', {
+            const response = await ApiService.getInstance().fetchData('login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ Email: email, Password: password })
+                body: JSON.stringify({ Email: email.trim(), Password: password.trim() })
             });
-            const json = await response.json();
-            console.log('Response:', json);
-    
-            if (response.status === 200) {
-                Alert.alert("Binevenido", "Inicio de sesión exitoso.");
+            
+            console.log('Response:', response);
+
+            if (response.message === 'Inicio de sesión exitoso') {
+                Alert.alert("Bienvenido", "Usuario verificado correctamente.");
+
+                // Guarda el token o el identificador de sesión en AsyncStorage
+                await AsyncStorage.setItem('id', response.id); // response.token asumiendo que tu API devuelve el token de autenticación
+
+                router.push('/home');  // Navega a la pantalla de inicio
             } else {
-                Alert.alert("Error", json.message || "No se pudo iniciar sesión.");
+                Alert.alert("Error", response.message || "Ops... algo salió mal.");
             }
         } catch (error) {
             console.error('Login Error:', error);
             Alert.alert("Error de Conexión", "No se pudo conectar al servidor.");
         }
     };
-      
+
 
     return (
         <View className="flex-1 items-center justify-center bg-white">

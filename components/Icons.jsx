@@ -36,3 +36,4 @@ export const CategoryIcon = (props) => <Ionicons name="hardware-chip-outline" si
 export const AvisosIcon = (props) => <MaterialCommunityIcons name="file-lock-outline" size={24} color="#9098B1" {...props} />
 export const TerminosIcon = (props) => <MaterialCommunityIcons name="file-check-outline" size={24} color="#9098B1" {...props} />
 export const GroupIcon = (props) => <MaterialCommunityIcons name="account-group-outline" size={24} color="#9098B1" {...props} />
+export const CerrarSesionIcon = (props) => <MaterialCommunityIcons name="exit-to-app" size={24} color="#9098B1" {...props} />

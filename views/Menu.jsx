@@ -1,14 +1,50 @@
-import { View, Text, Pressable, Image, ScrollView } from 'react-native'
-import React from 'react'
+import React, {useEffect, useState} from 'react'
+import { View, Pressable, Image, ScrollView, Alert } from 'react-native'
 import { styled } from 'nativewind'
-import { AvisosIcon, CategoryIcon, GroupIcon, HeartIcon, HomeIcon, PedidosIcon, SearchIcon, TagIcon, TerminosIcon } from '../components/Icons';
-import { Link } from 'expo-router';
+import { AvisosIcon, CategoryIcon, CerrarSesionIcon, GroupIcon, HeartIcon, HomeIcon, PedidosIcon, SearchIcon, TagIcon, TerminosIcon } from '../components/Icons';
+import { Link, useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Textito from '../components/Textito';
+import ApiService from '../lib/ApiService';
 
 const StyledPressable = styled(Pressable);
 
 const Menu = () => {
 
+  const [userName, setUserName] = useState(''); // Estado para almacenar el nombre del usuario
+  const router = useRouter();
+
+  // Función para cerrar la sesión
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('token'); // Elimina el token de sesión
+      Alert.alert("Sesión cerrada", "Has cerrado la sesión exitosamente.");
+      router.replace("/login"); // Redirige a la pantalla de login
+    } catch (error) {
+      console.error("Logout Error:", error);
+      Alert.alert("Error", "Hubo un problema al cerrar la sesión.");
+    }
+  };
+
+  // Función para obtener el nombre del usuario desde la API
+  const fetchUserName = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('id'); // Obtén el ID del usuario
+      console.log("User ID:", userId);
+      if (userId) {
+        const userData = await ApiService.getInstance().fetchData(`perfil/${userId}`);
+        setUserName(userData.nombre); // Actualiza el estado con el nombre del usuario
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      Alert.alert("Error", "No se pudo cargar la información del usuario.");
+    }
+  };
+
+  // Llama a fetchUserName al montar el componente
+  useEffect(() => {
+    fetchUserName();
+  }, []);
 
   return (
     <View className="bg-white h-full">
@@ -17,13 +53,13 @@ const Menu = () => {
         <View className="w-full bg-[#2587eb] pt-14 pb-5">
           <View className="flex-column items-center">
             <StyledPressable className='active:opacity-50'>
-              <Image source={require('../assets/logo-robopits.png')} className="w-48 h-48 active:opacity-50" />
+              <Image source={require('../assets/user-default.png')} className="w-48 h-48 active:opacity-50 rounded-full mb-5" />
             </StyledPressable>
-            <Textito className="text-white text-xl" fontFamily="PoppinsBold">Ángel de Jesús Lara</Textito>
+            <Textito className="text-white text-2xl" fontFamily="PoppinsBold">{userName || "Invitado"}</Textito>
 
             <Link asChild href="/login">
               <StyledPressable className='active:opacity-50'>
-                <Textito className="text-white mt-2">Ver mi perfil</Textito>
+                <Textito className="text-white mt-2" fontFamily="Poppins">Ver mi perfil</Textito>
               </StyledPressable>
             </Link>
           </View>
@@ -127,10 +163,22 @@ const Menu = () => {
             <StyledPressable className="flex-row items-center w-full h-12 px-5 bg-white active:bg-[#EBF0FF]">
               <GroupIcon color={"#3d3d3d"} />
               <Textito className="ml-5 text-md text-[#3d3d3d]" fontFamily='PoppinsBold'>
-                ¿Quién somos?
+                ¿Quiénes somos?
               </Textito>
             </StyledPressable>
           </Link>
+        </View>
+
+        <View className="bg-white">
+          <StyledPressable
+            onPress={handleLogout} // Asigna la función al evento onPress
+            className="flex-row items-center w-full h-12 px-5 bg-white active:bg-[#EBF0FF]"
+          >
+            <CerrarSesionIcon color={"#3d3d3d"} />
+            <Textito className="ml-5 text-md text-[#3d3d3d]" fontFamily='PoppinsBold'>
+              Cerrar sesión
+            </Textito>
+          </StyledPressable>
         </View>
 
       </ScrollView>

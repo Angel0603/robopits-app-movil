@@ -1,12 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
+import Pedidos from '../../views/Pedidos.jsx'
 
 const perfil = () => {
-  return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text>Pedidos</Text>
-    </View>
-  )
+  return <Pedidos />
+
 }
 
 export default perfil
