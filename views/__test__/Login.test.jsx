@@ -3,8 +3,14 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react-native';
 import Login from '../Login';
 
-jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper'); // Para evitar advertencias en tests de animaciones
+jest.mock('@react-native-async-storage/async-storage', () => ({
+  setItem: jest.fn(),
+  getItem: jest.fn(),
+  removeItem: jest.fn(),
+  clear: jest.fn(),
+}));
 
+jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper'); // Para evitar advertencias en tests de animaciones
 
 describe('Login', () => {
   beforeAll(() => {
