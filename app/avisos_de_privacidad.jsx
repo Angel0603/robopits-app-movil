@@ -1,12 +1,9 @@
 import { View, Text } from 'react-native'
 import React from 'react'
+import AvisosPrivacidad from '../views/AvisosPrivacidad'
 
 const avisos_de_privacidad = () => {
-  return (
-    <View>
-      <Text>avisos_de_privacidad</Text>
-    </View>
-  )
+  return <AvisosPrivacidad/>
 }
 
 export default avisos_de_privacidad

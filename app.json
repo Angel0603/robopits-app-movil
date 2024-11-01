@@ -4,7 +4,7 @@
     "slug": "robopits-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo-robopits.png",
+    "icon": "./assets/icono-app.png",
     "userInterfaceStyle": "light",
     "scheme": ["robopitsapp"],
     "splash": {
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo-robopits.png",
+        "foregroundImage": "./assets/icono-app.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.angel06.robopitsapp"

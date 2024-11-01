@@ -1,6 +1,7 @@
 import { View, Animated, Easing } from 'react-native';
 import React, { useEffect, useRef } from 'react';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Textito from '../../components/Textito';
 
 const SplashScreen = () => {
@@ -9,8 +10,26 @@ const SplashScreen = () => {
     // Crear un valor animado para la rotación
     const rotateValue = useRef(new Animated.Value(0)).current;
 
-    // Configurar la animación de rotación
+    // Configurar la animación de rotación y la redirección basada en el token de sesión
     useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const token = await AsyncStorage.getItem('token');
+                
+                // Redirige a "/home" si hay un token, o a "/login" si no
+                if (token) {
+                    router.replace('/home');
+                } else {
+                    router.replace('/login');
+                }
+            } catch (error) {
+                console.error('Error checking token:', error);
+                router.replace('/login'); // Redirige a login en caso de error
+            }
+        };
+
+        checkSession();
+
         // Función que controla la rotación
         const startRotation = () => {
             rotateValue.setValue(0);
@@ -26,13 +45,6 @@ const SplashScreen = () => {
 
         startRotation();
 
-        // Redireccionar después de 3 segundos
-        const timeout = setTimeout(() => {
-            router.push('/home');
-        }, 3000);
-
-        // Limpiar el timeout cuando el componente se desmonte
-        return () => clearTimeout(timeout);
     }, [rotateValue, router]);
 
     // Interpolación para convertir el valor de rotación de 0 a 360 grados
@@ -43,7 +55,7 @@ const SplashScreen = () => {
 
     return (
         <View className="flex-1">
-            {/* Imagen de fondo <Image source={require('../../assets/robosplash.png')} className="w-full h-full" />*/}
+            {/* Imagen de fondo <Image source={require('../../assets/robosplash.png')} className="w-full h-full" /> */}
             <View className="absolute justify-center items-center w-full h-3/6">
                 <Textito className="text-5xl font-black text-black-500 pt-10" fontFamily="PoppinsBold">
                     RoboPits
