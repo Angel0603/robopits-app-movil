@@ -1,22 +1,22 @@
-import { View, Text, Pressable, ScrollView, Image } from 'react-native'
+import { View, Text, Pressable, ScrollView, Image, RefreshControl } from 'react-native';
 import { styled } from 'nativewind';
 import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import ApiService from '../lib/ApiService.js';
-
-const StyledPressable = styled(Pressable);
-const StyledImage = styled(Image);
-
-import React, { useEffect, useState } from 'react'
-import ImageCarousel from '../components/ImageCarousel'
+import React, { useEffect, useState } from 'react';
+import ImageCarousel from '../components/ImageCarousel';
 import CategoriaScrollView from '../components/CategoriaScrollView.jsx';
 import ProductCard from '../components/ProductCard.jsx';
 import Textito from '../components/Textito.jsx';
 
-const Home = () => {
+const StyledPressable = styled(Pressable);
 
+const Home = () => {
     const [categorias, setCategorias] = useState([]);
     const [products, setProducts] = useState([]);
-
+    const [refreshing, setRefreshing] = useState(false);
+    const router = useRouter();
+    
     const showProducts = async () => {
         try {
             const response = await ApiService.getInstance().fetchData('Productos');
@@ -24,7 +24,7 @@ const Home = () => {
         } catch (error) {
             console.error('Error al obtener datos:', error);
         }
-    }
+    };
 
     const showCategorias = async () => {
         try {
@@ -35,13 +35,26 @@ const Home = () => {
         }
     };
 
+    // Función para manejar la actualización de la vista
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await showCategorias();
+        await showProducts();
+        setRefreshing(false);
+    };
+
     useEffect(() => {
         showCategorias();
         showProducts();
     }, []);
 
     return (
-        <ScrollView className="flex-1 bg-white">
+        <ScrollView
+            className="flex-1 bg-white"
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+        >
             <View className="flex-1 bg-white w-full items-center">
                 <View className="w-full">
                     <ImageCarousel />
@@ -75,11 +88,17 @@ const Home = () => {
                     </StyledPressable>
                 </View>
 
-                {/*Cards Productos */}
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
+                {/* Cards Productos */}
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                     <View className="w-full flex-row">
                         {products.map(product => (
-                            <ProductCard key={product._id} image={product.Imagen} name={product.NameProducto} price={product.Precio.toFixed(2)} />
+                            <ProductCard
+                                key={product._id}
+                                image={product.Imagen}
+                                name={product.NameProducto}
+                                price={product.Precio.toFixed(2)}
+                                onPress={() => router.push(`/${product._id}`, console.log(product._id))}
+                            />
                         ))}
                     </View>
                 </ScrollView>
@@ -99,14 +118,19 @@ const Home = () => {
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="mb-5">
                     <View className="w-full flex-row">
                         {products.map(product => (
-                            <ProductCard key={product._id} image={product.Imagen} name={product.NameProducto} price={product.Precio.toFixed(2)} />
+                            <ProductCard
+                                key={product._id}
+                                image={product.Imagen}
+                                name={product.NameProducto}
+                                price={product.Precio.toFixed(2)}
+                                onPress={() => router.push(`/${product._id}`, console.log(product._id))}
+                            />
                         ))}
                     </View>
                 </ScrollView>
-
             </View>
         </ScrollView>
-    )
-}
+    );
+};
 
-export default Home
+export default Home;

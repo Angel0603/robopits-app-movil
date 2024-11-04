@@ -13,7 +13,7 @@ export const UserIcon = (props) => <MaterialCommunityIcons name="account-outline
 export const HomeIcon = (props) => <MaterialCommunityIcons name="home-outline" size={24} color="#9098B1" {...props} />
 export const SearchIcon = (props) => <Ionicons name="search" size={24} color="#3BA4F6" {...props} />
 export const CartIcon = (props) => <MaterialCommunityIcons name="cart-outline" size={24} color="#9098B1" {...props} />
-export const HeartIcon = (props) => <MaterialCommunityIcons name="heart-outline" size={24} color="#9098B1" {...props} />
+export const HeartIcon = ({ color, filled, props }) => <MaterialCommunityIcons name={filled ? "heart" : "heart-outline"} size={24} color={color} {...props} />
 export const TagIcon = (props) => <MaterialCommunityIcons name="tag-outline" size={24} color="#9098B1" {...props} />
 export const UserTabIcon = (props) => <MaterialCommunityIcons name="account-outline" size={24} color="#9098B1" {...props} />
 
@@ -37,3 +37,7 @@ export const AvisosIcon = (props) => <MaterialCommunityIcons name="file-lock-out
 export const TerminosIcon = (props) => <MaterialCommunityIcons name="file-check-outline" size={24} color="#9098B1" {...props} />
 export const GroupIcon = (props) => <MaterialCommunityIcons name="account-group-outline" size={24} color="#9098B1" {...props} />
 export const CerrarSesionIcon = (props) => <MaterialCommunityIcons name="exit-to-app" size={24} color="#9098B1" {...props} />
+
+/* Iconos Detalle Producto */
+export const PlusIcon = (props) => <MaterialCommunityIcons name="plus-circle-outline" size={24} color="#9098B1" {...props} />
+export const MinusIcon = (props) => <MaterialCommunityIcons name="minus-circle-outline" size={24} color="#9098B1" {...props} />

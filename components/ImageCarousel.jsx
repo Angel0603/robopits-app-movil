@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, FlatList, Image, Dimensions, Animated } from 'react-native';
 import { styled } from 'nativewind';
 import ApiService from '../lib/ApiService.js';
+import SkeletonImage from './SkeletonImage';
 
 const StyledView = styled(View);
 const StyledImage = styled(Image);
@@ -18,13 +19,9 @@ const CarouselItem = ({ item }) => (
 
 const Pagination = ({ currentIndex, totalImages }) => {
   const dots = [];
-  const step = Math.ceil(totalImages / 5); // Divide total images into 5 steps
+  const step = Math.ceil(totalImages / 5);
 
-  const inputRange = Array.from({ length: totalImages }, (_, i) => i);
-  const dotPosition = currentIndex / step; // Normalized position
-
-  const scale = inputRange.map(i => i === currentIndex ? 1.5 : 1); // Enlarge the active dot
-
+  const dotPosition = currentIndex / step;
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
       {Array.from({ length: 5 }).map((_, i) => {
@@ -65,39 +62,44 @@ const ImageCarousel = () => {
   useEffect(() => {
     if (imagenes.length > 0) {
       intervalRef.current = setInterval(() => {
-        const nextIndex = (currentIndex + 1) % imagenes.length; // Ciclo a través de los índices
+        const nextIndex = (currentIndex + 1) % imagenes.length;
         setCurrentIndex(nextIndex);
         ref.current.scrollToIndex({ index: nextIndex, animated: true });
       }, 3000);
 
       return () => clearInterval(intervalRef.current);
     }
-  }, [currentIndex, imagenes.length]); // Asegurarse de limpiar el intervalo
+  }, [currentIndex, imagenes.length]);
 
   return (
     <StyledView className="py-5">
-      <FlatList
-        ref={ref}
-        data={imagenes}
-        renderItem={CarouselItem}
-        keyExtractor={item => item._id}
-        horizontal
-        showsHorizontalScrollIndicator={true}
-        pagingEnabled
-        onScrollToIndexFailed={info => {
-          console.log("Failed to scroll to index", info.index);
-          const wait = new Promise(resolve => setTimeout(resolve, 500));
-          wait.then(() => {
-            ref.current.scrollToIndex({ index: info.index, animated: true });
-          });
-        }}
-        onViewableItemsChanged={({ viewableItems }) => {
-          if (viewableItems.length > 0) {
-            setCurrentIndex(viewableItems[0].index);
-          }
-        }}
-      />
-      <Pagination currentIndex={currentIndex} totalImages={imagenes.length} />
+      {imagenes.length === 0 ? (
+        <SkeletonImage />
+      ) : (
+        <>
+          <FlatList
+            ref={ref}
+            data={imagenes}
+            renderItem={CarouselItem}
+            keyExtractor={item => item._id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled
+            onScrollToIndexFailed={info => {
+              const wait = new Promise(resolve => setTimeout(resolve, 500));
+              wait.then(() => {
+                ref.current.scrollToIndex({ index: info.index, animated: true });
+              });
+            }}
+            onViewableItemsChanged={({ viewableItems }) => {
+              if (viewableItems.length > 0) {
+                setCurrentIndex(viewableItems[0].index);
+              }
+            }}
+          />
+          <Pagination currentIndex={currentIndex} totalImages={imagenes.length} />
+        </>
+      )}
     </StyledView>
   );
 };

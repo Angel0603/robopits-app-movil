@@ -3,6 +3,7 @@ import { Tabs } from 'expo-router'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import Header from '../../components/Header';
+import { Tab } from '@rneui/base';
 
 const RootLayout = () => {
     return (
@@ -76,7 +77,6 @@ const RootLayout = () => {
                         title: 'Más'
                     }}
                 />
-
             </Tabs>
 
         </SafeAreaProvider>
