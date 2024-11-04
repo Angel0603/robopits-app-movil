@@ -1,14 +1,11 @@
 import { Stack } from 'expo-router'
 import { FontProvider } from '../components/FontContext'
-import Header from '../components/Header'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { CartIcon } from '../components/Icons';
 const RootLayout = () => {
   return (
     <SafeAreaProvider>
       <FontProvider>
         <Stack>
-          {/* CON ESTA RUTA INICIA EL SPLASH SCREEN */}
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(screens)" options={{ headerShown: false }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
@@ -29,6 +26,7 @@ const RootLayout = () => {
               },
             }}
           />
+          
           <Stack.Screen name="avisos_de_privacidad"
             options={{
               headerShown: true,
@@ -44,6 +42,7 @@ const RootLayout = () => {
               },
             }}
           />
+
           <Stack.Screen name="terminos_y_condiciones"
             options={{
               headerShown: true,

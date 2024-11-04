@@ -1,12 +1,9 @@
 import { View, Text } from 'react-native'
 import React from 'react'
+import Favoritos from '../../views/Favoritos'
 
 const favoritos = () => {
-  return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text>favoritos</Text>
-    </View>
-  )
+  return <Favoritos />
 }
 
 export default favoritos
