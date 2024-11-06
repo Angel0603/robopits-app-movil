@@ -108,10 +108,10 @@ const Ofertas = () => {
                                     <Textito className="line-through text-lg text-[#000]/60" fontFamily="PoppinsBold">
                                         ${oferta.PrecioOriginal.toFixed(2)}
                                     </Textito>
-                                    <Textito className="text-lg text-[#399918]" fontFamily="PoppinsBold">
+                                    <Textito className="text-lg text-green-500" fontFamily="PoppinsBold">
                                         ${oferta.PrecioOferta.toFixed(2)}
                                     </Textito>
-                                    <Textito className="text-sn text-[#399918]" fontFamily="PoppinsBold">
+                                    <Textito className="text-sn text-green-500" fontFamily="PoppinsBold">
                                         Termina: {formatFecha(oferta.FechaFin)}
                                     </Textito>
                                 </StyledPressable>
