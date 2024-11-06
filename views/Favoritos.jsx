@@ -4,6 +4,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ApiService from '../lib/ApiService';
 import Textito from '../components/Textito';
 import { useRouter } from 'expo-router';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { styled } from 'nativewind';
+
+const StyledPressable = styled(Pressable);
 
 const Favoritos = () => {
   const [favoritos, setFavoritos] = useState([]);
@@ -35,6 +39,29 @@ const Favoritos = () => {
     fetchFavoritos();
   }, []);
 
+  const toggleFavorite = async (productId) => {
+    const userId = await AsyncStorage.getItem('id');
+    try {
+      if (favoritos.some((producto) => producto._id === productId)) {
+        // Si ya está en favoritos, eliminarlo
+        await ApiService.getInstance().fetchData('favoritos/eliminar', {
+          method: 'POST',
+          body: JSON.stringify({ userId, productoId: productId }),
+        });
+        setFavoritos((prev) => prev.filter((producto) => producto._id !== productId));
+      } else {
+        // Si no está en favoritos, agregarlo
+        await ApiService.getInstance().fetchData('favoritos/agregar', {
+          method: 'POST',
+          body: JSON.stringify({ userId, productoId: productId }),
+        });
+        fetchFavoritos(); // Actualiza la lista de favoritos
+      }
+    } catch (error) {
+      console.error("Error al cambiar estado de favoritos:", error);
+    }
+  };
+
   return (
     <ScrollView
       className="flex-1 p-4 bg-white"
@@ -46,7 +73,7 @@ const Favoritos = () => {
 
       {favoritos.length === 0 ? (
         <View className="items-center justify-center mt-10">
-          <Image 
+          <Image
             source={require('../assets/favoritos.png')} // Asegúrate de tener una imagen en esta ruta
             className="w-48 h-48 mb-4"
             style={{ resizeMode: 'contain' }}
@@ -60,16 +87,39 @@ const Favoritos = () => {
         </View>
       ) : (
         favoritos.map((producto, index) => (
-          <View key={index} className="bg-white p-4 rounded-lg shadow mb-4">
-            <Textito className="text-lg font-bold mb-2">{producto.name}</Textito>
-            <View className="flex-row items-center">
-              <Image source={{ uri: producto.image }} className="w-48 h-48" style={{ resizeMode: 'contain' }} />
-              <View className="flex-shrink ml-4">
-                <Textito className="text-gray-700"><Textito fontFamily="PoppinsBold">Precio:</Textito> ${producto.price}</Textito>
-                <Textito className="text-gray-700"><Textito fontFamily="PoppinsBold">Descripción:</Textito> {producto.description}</Textito>
+          <StyledPressable key={index} onPress={() => router.push(`/${producto._id}`)}>
+            <View className="bg-white p-4 rounded-lg shadow mb-4">
+              {/* Contenedor de imagen con ícono de favoritos */}
+              <View className="relative">
+                <Image
+                  source={{ uri: producto.Imagen }}
+                  className="w-full h-48 rounded-lg"
+                  style={{ resizeMode: 'contain' }}
+                />
+                <StyledPressable
+                  onPress={() => toggleFavorite(producto._id)}
+                  className="absolute top-2 right-2 p-2 rounded-full active:scale-125"
+                  style={{
+                    backgroundColor: favoritos.some((fav) => fav._id === producto._id) ? "#3BA4F6" : "rgba(255, 255, 255, 0.6)",
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name={favoritos.some((fav) => fav._id === producto._id) ? "heart" : "heart-outline"}
+                    size={24}
+                    color={favoritos.some((fav) => fav._id === producto._id) ? "#BFE6FE" : "#3BA4F6"}
+                  />
+                </StyledPressable>
+              </View>
+
+              <Textito className="text-lg font-bold mb-2">{producto.NameProducto}</Textito>
+              <View className="flex-row items-center">
+                <View className="flex-shrink ml-4">
+                  <Textito className="text-gray-700"><Textito fontFamily="PoppinsBold">Precio:</Textito> ${producto.Precio}</Textito>
+                  <Textito className="text-gray-700"><Textito fontFamily="PoppinsBold">Categoría:</Textito> {producto.Categoria}</Textito>
+                </View>
               </View>
             </View>
-          </View>
+          </StyledPressable>
         ))
       )}
     </ScrollView>
