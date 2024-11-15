@@ -41,3 +41,8 @@ export const CerrarSesionIcon = (props) => <MaterialCommunityIcons name="exit-to
 /* Iconos Detalle Producto */
 export const PlusIcon = (props) => <MaterialCommunityIcons name="plus-circle-outline" size={24} color="#9098B1" {...props} />
 export const MinusIcon = (props) => <MaterialCommunityIcons name="minus-circle-outline" size={24} color="#9098B1" {...props} />
+
+/* Iconos Carrito */
+export const DeleteIcon = (props) => <MaterialCommunityIcons name="delete-circle" size={24} color="#9098B1" {...props} />
+export const IncrementIcon = (props) => <MaterialCommunityIcons name="plus-circle" size={24} color="#9098B1" {...props} />
+export const DecrementIcon = (props) => <MaterialCommunityIcons name="minus-circle" size={24} color="#9098B1" {...props} />

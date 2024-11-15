@@ -90,7 +90,7 @@ const Ofertas = () => {
                             <Animated.View
                                 key={oferta._id}
                                 style={{ transform: [{ scale: scaleValue }] }}
-                                className="bg-white border border-gray-200 rounded-lg shadow-md m-2 p-4 w-[45%]"
+                                className="bg-white border border-gray-200 rounded-lg shadow-md m-2 p-4 w-full max-w-sm"
                             >
                                 <StyledPressable
                                     onPressIn={() => handlePressIn(scaleValue)}
@@ -99,7 +99,7 @@ const Ofertas = () => {
                                 >
                                     <StyledImage
                                         source={{ uri: oferta.Imagen }}
-                                        className="w-full h-32 rounded-md mb-2"
+                                        className="w-full h-48 rounded-md mb-2"
                                         style={{ resizeMode: 'contain' }}
                                     />
                                     <Textito className="text-lg text-[#223263] mb-1" fontFamily='PoppinsBold'>

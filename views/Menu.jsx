@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Pressable, Image, ScrollView, Alert } from 'react-native'
 import { styled } from 'nativewind'
-import { AvisosIcon, CategoryIcon, CerrarSesionIcon, GroupIcon, HeartIcon, HomeIcon, PedidosIcon, SearchIcon, TagIcon, TerminosIcon } from '../components/Icons';
+import { AvisosIcon, CartIcon, CategoryIcon, CerrarSesionIcon, GroupIcon, HeartIcon, HomeIcon, PedidosIcon, SearchIcon, TagIcon, TerminosIcon } from '../components/Icons';
 import { Link, useRouter } from 'expo-router';
+import { showMessage } from "react-native-flash-message";
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Textito from '../components/Textito';
 import ApiService from '../lib/ApiService';
@@ -18,11 +20,23 @@ const Menu = () => {
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('token'); // Elimina el token de sesión
-      Alert.alert("Sesión cerrada", "Has cerrado la sesión exitosamente.");
+      showMessage({
+        message: "Sesión cerrada",
+        description: "Has cerrado la sesión exitosamente.",
+        type: "success",
+        icon: "success",
+        duration: 3000,
+      });
       router.replace("/login"); // Redirige a la pantalla de login
     } catch (error) {
       console.error("Logout Error:", error);
-      Alert.alert("Error", "Hubo un problema al cerrar la sesión.");
+      showMessage({
+        message: "Error",
+        description: "Hubo un problema al cerrar la sesión.",
+        type: "danger",
+        icon: "danger",
+        duration: 3000,
+      });
     }
   };
 
@@ -34,10 +48,23 @@ const Menu = () => {
       if (userId) {
         const userData = await ApiService.getInstance().fetchData(`perfil/${userId}`);
         setUserName(userData.nombre); // Actualiza el estado con el nombre del usuario
+        showMessage({
+          message: "Bienvenido",
+          description: `Hola, ${userData.nombre}!`,
+          type: "success",
+          icon: "success",    
+          duration: 3000,
+        });
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
-      Alert.alert("Error", "No se pudo cargar la información del usuario.");
+      showMessage({
+        message: "Error",
+        description: "No se pudo cargar la información del usuario.",
+        type: "danger",
+        icon: "danger",
+        duration: 3000,
+      });
     }
   };
 
@@ -95,6 +122,17 @@ const Menu = () => {
               <PedidosIcon color={"#3d3d3d"} />
               <Textito className="ml-5 text-md text-[#3d3d3d]" fontFamily='PoppinsBold'>
                 Mis pedidos
+              </Textito>
+            </StyledPressable>
+          </Link>
+        </View>
+
+        <View className="bg-white">
+          <Link asChild href="/carrito">
+            <StyledPressable className="flex-row items-center w-full h-12 px-5 bg-white active:bg-[#EBF0FF]">
+              <CartIcon color={"#3d3d3d"} />
+              <Textito className="ml-5 text-md text-[#3d3d3d]" fontFamily='PoppinsBold'>
+                Mi carrito
               </Textito>
             </StyledPressable>
           </Link>

@@ -3,6 +3,8 @@ import { View, Image, Pressable, Alert } from 'react-native';
 import { EmailIcon, PasswordIcon, EyeIcon, EyeOffIcon } from '../components/Icons';
 import { styled } from 'nativewind';
 import { Link, useRouter } from 'expo-router';
+import { showMessage } from "react-native-flash-message";
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ApiService from '../lib/ApiService'; // Importa tu servicio API para manejar las peticiones
 import CustomInput from '../components/CustomInput';
@@ -11,6 +13,7 @@ import Textito from '../components/Textito';
 const StyledPressable = styled(Pressable);
 
 const Login = () => {
+    const [userName, setUserName] = useState(''); // Estado para almacenar el nombre del usuario
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -21,8 +24,8 @@ const Login = () => {
     };
 
     const handleLogin = async () => {
-        console.log('Attempting login with:', 'Email: ' + email, 'Password: ' + password); // This should show the entered values
-
+        console.log('Attempting login with:', 'Email: ' + email, 'Password: ' + password); // Muestra los valores ingresados
+    
         try {
             const response = await ApiService.getInstance().fetchData('login', {
                 method: 'POST',
@@ -31,25 +34,68 @@ const Login = () => {
                 },
                 body: JSON.stringify({ Email: email.trim(), Password: password.trim() })
             });
-            
+    
             console.log('Response:', response);
-
+    
             if (response.message === 'Inicio de sesión exitoso') {
-                Alert.alert("Bienvenido", "Usuario verificado correctamente.");
-
+                const userId = await AsyncStorage.getItem('id'); // Obtén el ID del usuario
+                console.log("User ID:", userId);
+                if (userId) {
+                  const userData = await ApiService.getInstance().fetchData(`perfil/${userId}`);
+                  setUserName(userData.nombre); // Actualiza el estado con el nombre del usuario
+                  showMessage({
+                    message: "Usuario verificado correctamente",
+                    description: `Bienvenido, ${userData.nombre}!`,
+                    type: "success",
+                    icon: "success",
+                    duration: 3000,
+                  });
+                }
+    
                 // Guarda el token o el identificador de sesión en AsyncStorage
-                await AsyncStorage.setItem('id', response.id); // response.token asumiendo que tu API devuelve el token de autenticación
-
-                router.push('/home');  // Navega a la pantalla de inicio
+                await AsyncStorage.setItem('id', response.id);
+    
+                // Navega a la pantalla de inicio después de un pequeño retraso para que el mensaje se muestre completamente
+                setTimeout(() => {
+                    router.push('/home');
+                }, 1000);
+            }else if(response.message === 'Contraseña incorrecta'){
+                showMessage({
+                    message: "Verifica tu contraseña",
+                    description: response.message || "La contraseña es incorrecta.",
+                    type: "danger",
+                    icon: "danger",
+                    duration: 3000,
+                });
+            }
+            else if(response.message === 'Usuario no encontrado'){
+                showMessage({
+                    message: "Verifica tu correo o contraseña",
+                    description: response.message || "La contraseña o el correo es incorrecto.",
+                    type: "danger",
+                    icon: "danger",
+                    duration: 3000,
+                });
             } else {
-                Alert.alert("Error", response.message || "Ops... algo salió mal.");
+                showMessage({
+                    message: "Error",
+                    description: response.message || "Ops... algo salió mal.",
+                    type: "danger",
+                    icon: "danger",
+                    duration: 3000,
+                });
             }
         } catch (error) {
             console.error('Login Error:', error);
-            Alert.alert("Error de Conexión", "No se pudo conectar al servidor.");
+            showMessage({
+                message: "Error de Conexión",
+                description: "No se pudo conectar al servidor.",
+                type: "danger",
+                icon: "danger",
+                duration: 3000,
+            });
         }
     };
-
 
     return (
         <View className="flex-1 items-center justify-center bg-white">

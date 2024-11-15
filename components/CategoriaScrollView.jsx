@@ -31,7 +31,7 @@ const CategoriaScrollView = ({ categorias }) => {
           const Icon = categoryIcons[categoria.NameCategoria] || ProtoboardIcon; // Default Icon if none matched
           
           return (
-            <Link key={categoria._id} href={`/categoria/${categoria._id}`} asChild>
+            <Link key={categoria._id} href={`categoria/${categoria._id}`} asChild>
               <StyledPressable className="flex-column items-center">
                 <View className="w-24 h-24 rounded-full mx-5 mt-5 mb-2 items-center justify-center border border-[#EBF0FF]">
                   <Icon color="#3ba4f6" size={34} />

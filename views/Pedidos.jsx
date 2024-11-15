@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ApiService from '../lib/ApiService';
 import Textito from '../components/Textito';
 import { useRouter } from 'expo-router';
+import { showMessage } from "react-native-flash-message";
 
 const Pedidos = () => {
   const [pedidos, setPedidos] = useState([]);
@@ -12,21 +13,38 @@ const Pedidos = () => {
 
   // Función para obtener pedidos del cliente
   const fetchPedidos = async () => {
-    try {
-      const userId = await AsyncStorage.getItem('id'); // Obtener el ID del cliente
-      if (userId) {
-        const pedidosData = await ApiService.getInstance().fetchData(`pedidosCliente/${userId}`);
-        setPedidos(pedidosData.pedidos || []); // Asegurarse de que pedidos sea un array, aunque esté vacío
+    const userId = await AsyncStorage.getItem('id'); // Obtener el ID del cliente
+    if (userId) {
+      const pedidosData = await ApiService.getInstance().fetchData(`pedidosCliente/${userId}`);
+      
+      if (pedidosData.error) {
+        // Verifica si el error es específicamente un 404
+        if (pedidosData.status === 404) {
+          showMessage({
+            message: "No hay pedidos",
+            description: "No se encontraron pedidos para este cliente.",
+            type: "info",
+            icon: "info",
+          });
+        } else {
+          showMessage({
+            message: "Error",
+            description: "Hubo un problema al obtener los pedidos. Intente nuevamente.",
+            type: "danger",
+            icon: "danger",
+          });
+        }
+        setPedidos([]); // Asegura que el estado sea un array vacío en caso de error
+      } else {
+        setPedidos(pedidosData.pedidos || []); // Asigna los pedidos si no hubo error
       }
-    } catch (error) {
-      console.error("Error fetching pedidos:", error);
     }
   };
 
   // Función para manejar la actualización al hacer "pull-to-refresh"
   const onRefresh = async () => {
     setRefreshing(true);
-    await fetchPedidos(); // Llama a la función para obtener los pedidos
+    await fetchPedidos();
     setRefreshing(false);
   };
 
@@ -47,7 +65,7 @@ const Pedidos = () => {
       {pedidos.length === 0 ? (
         <View className="items-center justify-center mt-10">
           <Image 
-            source={require('../assets/sin-pedidos.png')} // Asegúrate de tener una imagen en esta ruta
+            source={require('../assets/sin-pedidos.png')} 
             className="w-48 h-48 mb-4"
             style={{ resizeMode: 'contain' }}
           />

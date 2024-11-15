@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View, Image, Pressable, Alert } from 'react-native';
-import CustomInput from '../components/CustomInput';
 import { EmailIcon, PasswordIcon, EyeIcon, EyeOffIcon, UserIcon } from '../components/Icons';
-import Textito from '../components/Textito';
 import { styled } from 'nativewind';
-import ApiService from '../lib/ApiService'; // Importa tu servicio API para manejar las peticiones
 import { Link, useRouter } from 'expo-router';
+import { showMessage } from "react-native-flash-message";
+import ApiService from '../lib/ApiService'; // Importa tu servicio API para manejar las peticiones
+import Textito from '../components/Textito';
+import CustomInput from '../components/CustomInput';
 
 const StyledPressable = styled(Pressable);
 
@@ -26,38 +27,71 @@ const Registro = () => {
     // Función para manejar el registro
     const handleRegister = async () => {
         if (password !== confirmPassword) {
-            Alert.alert("Error", "Las contraseñas no coinciden.");
+            showMessage({
+                message: "Verificar contraseñas",
+                description: "Las contraseñas no coinciden.",
+                type: "warning",
+                icon: "warning",
+                duration: 3000,
+            });
             return;
         }
-
+    
         try {
             // Llamada a ApiService con las opciones correctas
             const response = await ApiService.getInstance().fetchData('register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ Nombre: nombre.trim(), Email: email.trim(), Password: password.trim() }),
-                credentials: 'include', // Asegura que las cookies se envíen correctamente
+                body: JSON.stringify({
+                    Nombre: nombre.trim(),
+                    Email: email.trim(),
+                    Password: password.trim()
+                }),
+                credentials: 'include'
             });
-
+    
             console.log("Respuesta recibida:", response);
-
+    
             if (response?.id) {
-                Alert.alert("Registro Exitoso", "Cuenta creada satisfactoriamente.");
+                showMessage({
+                    message: "Registro Exitoso",
+                    description: "Cuenta creada satisfactoriamente.",
+                    type: "success",
+                    icon: "success",
+                    duration: 3000,
+                });
                 // Limpiar los campos después del registro exitoso
                 setNombre('');
                 setEmail('');
                 setPassword('');
                 setConfirmPassword('');
-                router.push('/login'); // Redirige al login después del registro
-            }else if(response == "el correo ya esta en uso"){
-                Alert.alert("No se pudo registrar", response.message || "El correo ya se encuentra registrado.");
-            }
-            else {
-                Alert.alert("Error de Registro", response.message || "No se pudo crear la cuenta.");
+                router.push('/login'); // Redirige al Login después del registro
+            } else if (response.message === "El correo ya esta en uso") {
+                showMessage({
+                    message: "No se pudo registrar",
+                    description: "El correo ya se encuentra registrado.",
+                    type: "danger",
+                    icon: "danger",
+                    duration: 3000,
+                });
+            } else {
+                showMessage({
+                    message: "Error de Registro",
+                    description: response.message || "No se pudo crear la cuenta.",
+                    type: "danger",
+                    icon: "danger",
+                    duration: 3000,
+                });
             }
         } catch (error) {
             console.error("Error en el registro:", error);
-            Alert.alert("Error", "Hubo un problema con el registro. Por favor, intenta más tarde.");
+            showMessage({
+                message: "Error",
+                description: "Hubo un problema con el registro. Por favor, intenta más tarde.",
+                type: "danger",
+                icon: "danger",
+                duration: 3000,
+            });
         }
     };
 
