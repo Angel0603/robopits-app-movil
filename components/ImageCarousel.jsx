@@ -18,7 +18,6 @@ const CarouselItem = ({ item }) => (
 );
 
 const Pagination = ({ currentIndex, totalImages }) => {
-  const dots = [];
   const step = Math.ceil(totalImages / 5);
 
   const dotPosition = currentIndex / step;

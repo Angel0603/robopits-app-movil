@@ -94,6 +94,7 @@ const Pedidos = () => {
             <Textito className="text-gray-700"><Textito fontFamily="PoppinsBold">Estado:</Textito> {pedido.estado}</Textito>
             <Textito className="text-gray-700"><Textito fontFamily="PoppinsBold">Dirección:</Textito> {pedido.direccion}</Textito>
             <Textito className="text-gray-700"><Textito fontFamily="PoppinsBold">Punto de Retiro:</Textito> {pedido.puntoDeRetiro}</Textito>
+            <Textito className="text-gray-700"><Textito fontFamily="PoppinsBold">Pago:</Textito> {pedido.pago}</Textito>
           </View>
         ))
       )}

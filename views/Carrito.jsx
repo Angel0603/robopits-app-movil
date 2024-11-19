@@ -17,6 +17,7 @@ const Carrito = () => {
     const [refreshing, setRefreshing] = useState(false);
     const [total, setTotal] = useState(0);
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisible2, setModalVisible2] = useState(false);
     const [puntoDeEntrega, setPuntoDeEntrega] = useState("");
     const { initPaymentSheet, presentPaymentSheet } = useStripe();
     const [isPaymentSheetReady, setIsPaymentSheetReady] = useState(false);
@@ -54,6 +55,42 @@ const Carrito = () => {
     const onRefresh = () => {
         setRefreshing(true);
         fetchCarrito();
+    };
+
+    const crearPedido = async (estadoPago) => {
+        try {
+            const userId = await AsyncStorage.getItem('id');
+            if (!userId || !puntoDeEntrega) {
+                showMessage({ message: "Intentelo de nuevo", description: "Seleccione un punto de entrega antes de continuar.", type: "danger" });
+                return;
+            }
+            const response = await ApiService.getInstance().fetchData('crearPedido', {
+                method: 'POST',
+                body: JSON.stringify({ userId, direccion: puntoDeEntrega, descuento: 0, pago: estadoPago }),
+            });
+            if (response.message === "Pedido creado exitosamente") {
+                showMessage({ message: "Pedido creado", description: "El pedido ha sido creado exitosamente.", type: "success" });
+                setCarritoItems([]);
+                setTotal(0);
+            } else {
+                showMessage({ message: "Error", description: response.message || "No se pudo crear el pedido.", type: "danger" });
+            }
+        } catch (error) {
+            console.error("Error al crear el pedido:", error);
+            showMessage({ message: "Error", description: "Hubo un problema al crear el pedido.", type: "danger" });
+        }
+    };
+
+    // Función para abrir el modal de punto de entrega
+    const abrirModalPuntoDeEntrega = () => setModalVisible(true);
+    const abrirModalPuntoDeEntrega2 = () => setModalVisible2(true);
+    
+    // Función para seleccionar el punto de entrega
+    const seleccionarPuntoDeEntrega = (punto) => {
+        setPuntoDeEntrega(punto);
+        setModalVisible(false);
+        crearPedido("Pendiente");
+        showMessage({ message: "Punto de entrega seleccionado", description: `Has elegido: ${punto}`, type: "info" });
     };
 
     // Lógica de Stripe para inicializar y abrir la Payment Sheet
@@ -95,7 +132,14 @@ const Carrito = () => {
             setIsPaymentSheetReady(true);
         }
     };
-    
+
+    const pagarAhora = (punto) => {
+        setPuntoDeEntrega(punto);
+        setModalVisible2(false);
+        openPaymentSheet();
+        showMessage({ message: "Punto de entrega seleccionado", description: `Has elegido: ${punto}`, type: "info" });
+    }
+
     const openPaymentSheet = async () => {
 
         // Asegúrate de que siempre configuras un nuevo flujo de pago
@@ -127,6 +171,7 @@ const Carrito = () => {
                 description: "¡Tu pedido está confirmado!",
                 type: "success",
             });
+            crearPedido("Pagado"); // Crear el pedido con estado "Pagado" si el pago fue exitoso
         }
     };
 
@@ -211,20 +256,10 @@ const Carrito = () => {
         }
     };
 
-    // Función para abrir el modal de punto de entrega
-    const abrirModalPuntoDeEntrega = () => setModalVisible(true);
-
-    // Función para seleccionar el punto de entrega
-    const seleccionarPuntoDeEntrega = (punto) => {
-        setPuntoDeEntrega(punto);
-        setModalVisible(false);
-        showMessage({ message: "Punto de entrega seleccionado", description: `Has elegido: ${punto}`, type: "info" });
-    };
-
     if (loading) {
         return (
             <View className="flex-1 justify-center items-center">
-                <ActivityIndicator size="large" color="#3ba4f6" />
+                <ActivityIndicator size={36} color="#3ba4f6" />
             </View>
         );
     }
@@ -261,14 +296,14 @@ const Carrito = () => {
                             <Textito className="text-gray-600">Cantidad: {item.quantity}</Textito>
 
                             <View className="flex-row mt-2 space-x-2">
-                                <StyledPressable onPress={() => handleIncrement(item.productId._id)}>
-                                    <IncrementIcon className="text-[#3ba4f6]" size="34" />
+                                <StyledPressable className='active:opacity-50' onPress={() => handleIncrement(item.productId._id)}>
+                                    <IncrementIcon className="text-[#3ba4f6]" size={36} />
                                 </StyledPressable>
-                                <StyledPressable onPress={() => handleDecrement(item.productId._id)}>
-                                    <DecrementIcon className="text-[#3ba4f6]" size="34" />
+                                <StyledPressable className='active:opacity-50' onPress={() => handleDecrement(item.productId._id)}>
+                                    <DecrementIcon className="text-[#3ba4f6]" size={36} />
                                 </StyledPressable>
-                                <StyledPressable onPress={() => handleRemove(item.productId._id)}>
-                                    <DeleteIcon className="text-red-500" size="34" />
+                                <StyledPressable className='active:opacity-50' onPress={() => handleRemove(item.productId._id)}>
+                                    <DeleteIcon className="text-red-500" size={36} />
                                 </StyledPressable>
                             </View>
                         </View>
@@ -285,9 +320,9 @@ const Carrito = () => {
                     {/* Botón para abrir modal de punto de entrega */}
                     <StyledPressable
                         onPress={abrirModalPuntoDeEntrega}
-                        className="bg-[#4db4b2] py-4 rounded-lg items-center mt-4"
+                        className="bg-[#4db4b2] py-4 rounded-lg items-center mt-4 active:opacity-50"
                     >
-                        <Textito className="text-white text-lg font-bold">Elegir Punto de Entrega</Textito>
+                        <Textito className="text-white text-lg font-bold">Pagar después</Textito>
                     </StyledPressable>
 
                     {/* Modal para seleccionar punto de entrega */}
@@ -295,26 +330,44 @@ const Carrito = () => {
                         <View className="flex-1 justify-center items-center bg-black/50">
                             <View className="bg-white p-4 rounded-lg w-80">
                                 <Textito className="text-lg font-bold mb-4">Selecciona un punto de entrega</Textito>
-                                <Pressable onPress={() => seleccionarPuntoDeEntrega("Centro de Huejutla")} className="p-2 border-b border-gray-200">
+                                <StyledPressable onPress={() => seleccionarPuntoDeEntrega("Centro de Huejutla")} className="p-2 border-b border-gray-200">
                                     <Textito>Centro de Huejutla</Textito>
-                                </Pressable>
-                                <Pressable onPress={() => seleccionarPuntoDeEntrega("Parque de poblamiento")} className="p-2">
+                                </StyledPressable>
+                                <StyledPressable onPress={() => seleccionarPuntoDeEntrega("Parque de poblamiento")} className="p-2">
                                     <Textito>Parque de poblamiento</Textito>
-                                </Pressable>
-                                <TouchableOpacity onPress={() => setModalVisible(false)} className="mt-4">
+                                </StyledPressable>
+                                <StyledPressable onPress={() => setModalVisible(false)} className="mt-4">
                                     <Textito className="text-center text-[#3ba4f6] font-bold">Cerrar</Textito>
-                                </TouchableOpacity>
+                                </StyledPressable>
                             </View>
                         </View>
                     </Modal>
 
                     {/* Botón de pagar con Stripe */}
                     <StyledPressable
-                        onPress={openPaymentSheet}
-                        className="bg-[#3ba4f6] py-4 rounded-lg items-center mt-4 mb-10"
+                        onPress={abrirModalPuntoDeEntrega2}
+                        className="bg-[#3ba4f6] py-4 rounded-lg items-center mt-4 mb-10 active:opacity-50"
                     >
                         <Textito className="text-white text-lg font-bold">Pagar Ahora</Textito>
                     </StyledPressable>
+
+                    {/* Modal para pagar ahora */}
+                    <Modal visible={modalVisible2} transparent={true} animationType="slide">
+                        <View className="flex-1 justify-center items-center bg-black/50">
+                            <View className="bg-white p-4 rounded-lg w-80">
+                                <Textito className="text-lg font-bold mb-4">Selecciona un punto de entrega</Textito>
+                                <StyledPressable onPress={() => pagarAhora("Centro de Huejutla")} className="p-2 border-b border-gray-200">
+                                    <Textito>Centro de Huejutla</Textito>
+                                </StyledPressable>
+                                <StyledPressable onPress={() => pagarAhora("Parque de poblamiento")} className="p-2">
+                                    <Textito>Parque de poblamiento</Textito>
+                                </StyledPressable>
+                                <StyledPressable onPress={() => setModalVisible(false)} className="mt-4">
+                                    <Textito className="text-center text-[#3ba4f6] font-bold">Cerrar</Textito>
+                                </StyledPressable>
+                            </View>
+                        </View>
+                    </Modal>
                 </>
             )}
         </ScrollView>

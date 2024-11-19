@@ -1,6 +1,6 @@
 import React from 'react'
 import { Stack } from 'expo-router'
-import { FontProvider } from '../../components/FontContext'
+import { FontProvider } from '../../components/FontContext.jsx'
 
 const RootLayout = () => {
     return (

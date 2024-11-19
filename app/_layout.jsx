@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react'
 import LoadingSpinner from '../components/LoadingSpinner.jsx'
 import ApiService from '../lib/ApiService.js'
 import FlashMessage from "react-native-flash-message";
-import SplashScreen from './(screens)/splash.jsx'
 
 const RootLayout = () => {
   const [publishableKey, setPublishableKey] = useState('');
@@ -115,6 +114,23 @@ const RootLayout = () => {
                 headerTitleAlign: 'center',
                 headerStyle: {
                   backgroundColor: '#27787a',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                  fontFamily: 'Poppins',
+                },
+              }}
+            />
+
+            <Stack.Screen name="perfil"
+              options={{
+                headerShown: true,
+                headerTitle: 'Perfil',
+                headerBackTitle: 'Atrás',
+                headerTitleAlign: 'center',
+                headerStyle: {
+                  backgroundColor: '#2587eb',
                 },
                 headerTintColor: '#fff',
                 headerTitleStyle: {

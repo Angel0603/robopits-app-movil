@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Pressable, Image, ScrollView, Alert } from 'react-native'
+import { View, Pressable, Image, ScrollView, RefreshControl } from 'react-native'
 import { styled } from 'nativewind'
 import { AvisosIcon, CartIcon, CategoryIcon, CerrarSesionIcon, GroupIcon, HeartIcon, HomeIcon, PedidosIcon, SearchIcon, TagIcon, TerminosIcon } from '../components/Icons';
 import { Link, useRouter } from 'expo-router';
@@ -14,6 +14,7 @@ const StyledPressable = styled(Pressable);
 const Menu = () => {
 
   const [userName, setUserName] = useState(''); // Estado para almacenar el nombre del usuario
+  const [refreshing, setRefreshing] = useState(false); // Estado para controlar el RefreshControl
   const router = useRouter();
 
   // Función para cerrar la sesión
@@ -52,7 +53,7 @@ const Menu = () => {
           message: "Bienvenido",
           description: `Hola, ${userData.nombre}!`,
           type: "success",
-          icon: "success",    
+          icon: "success",
           duration: 3000,
         });
       }
@@ -66,6 +67,13 @@ const Menu = () => {
         duration: 3000,
       });
     }
+  };
+
+  // Función para manejar la recarga al usar RefreshControl
+  const onRefresh = async () => {
+    setRefreshing(true); // Activa el indicador de recarga
+    await fetchUserName(); // Llama a la función para recargar datos
+    setRefreshing(false); // Desactiva el indicador de recarga
   };
 
   // Llama a fetchUserName al montar el componente
@@ -84,7 +92,7 @@ const Menu = () => {
             </StyledPressable>
             <Textito className="text-white text-2xl" fontFamily="PoppinsBold">{userName || "Invitado"}</Textito>
 
-            <Link asChild href="/login">
+            <Link asChild href="/perfil">
               <StyledPressable className='active:opacity-50'>
                 <Textito className="text-white mt-2" fontFamily="Poppins">Ver mi perfil</Textito>
               </StyledPressable>
@@ -93,7 +101,12 @@ const Menu = () => {
         </View>
       </View>
 
-      <ScrollView className="my-2">
+      <ScrollView
+        className="my-2"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View className="bg-white">
           <Link asChild href="/home">
             <StyledPressable className="flex-row items-center w-full h-12 px-5 bg-white active:bg-[#EBF0FF]">

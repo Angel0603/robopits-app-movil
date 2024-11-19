@@ -51,13 +51,12 @@ const AnimatedSection = ({ title, content, expanded, toggleExpanded }) => {
 const DetalleProducto = () => {
   const { idProducto } = useLocalSearchParams();
   const [productoInfo, setProductoInfo] = useState(null);
-  const [recomendaciones, setRecomendaciones] = useState([]); // Estado para las recomendaciones
+  const [recomendaciones, setRecomendaciones] = useState([]);
   const [isFavorite, setIsFavorite] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
   const router = useRouter();
 
-  //Recomendaciones
   const fetchRecomendaciones = async () => {
     try {
       const response = await ApiService.getInstance().fetchData('recomendaciones');
@@ -72,13 +71,11 @@ const DetalleProducto = () => {
     }
   };
 
-  //Carrito
-  // Función para manejar el evento de agregar al carrito
   const handleAddToCart = async () => {
     try {
-      const userId = await AsyncStorage.getItem('id'); // Obtén el ID del usuario desde AsyncStorage
+      const userId = await AsyncStorage.getItem('id');
       const productId = idProducto;
-      const quantity = 1; // Cantidad por defecto, puede cambiarse según tu lógica
+      const quantity = 1;
 
       const response = await ApiService.getInstance().fetchData('carritoagregar', {
         method: 'POST',
@@ -108,7 +105,6 @@ const DetalleProducto = () => {
     }
   };
 
-  // Stripe
   const [payableAmount, setPayableAmount] = useState(null);
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [isPaymentSheetReady, setIsPaymentSheetReady] = useState(false);
@@ -150,7 +146,7 @@ const DetalleProducto = () => {
       paymentIntentClientSecret: paymentIntent,
       allowsDelayedPaymentMethods: true,
       defaultBillingDetails: { name: 'Angel Lara' },
-      returnURL: "robopitsapp://payment-return", // Cambia esto a tu esquema de URL personalizado
+      returnURL: "robopitsapp://payment-return",
     });
 
     if (error) {
@@ -167,11 +163,7 @@ const DetalleProducto = () => {
   };
 
   const openPaymentSheet = async () => {
-
-    // Asegúrate de que siempre configuras un nuevo flujo de pago
     setIsPaymentSheetReady(false);
-
-    // Vuelve a inicializar la Payment Sheet para obtener un nuevo paymentIntent
     await initializePaymentSheet();
 
     if (!isPaymentSheetReady) {
@@ -204,12 +196,11 @@ const DetalleProducto = () => {
     const setupPayment = async () => {
       await initializePaymentSheet();
     };
-    if (payableAmount !== null) { // Espera a que payableAmount tenga un valor antes de configurar la PaymentSheet
+    if (payableAmount !== null) {
       setupPayment();
     }
-  }, [payableAmount]); // Observa los cambios en payableAmount
+  }, [payableAmount]);
 
-  // Estados para mostrar características y detalles del producto
   const [showCaracteristicas, setShowCaracteristicas] = useState(false);
   const [showCategoria, setShowCategoria] = useState(false);
   const [showIncluye, setShowIncluye] = useState(false);
@@ -219,7 +210,6 @@ const DetalleProducto = () => {
       const producto = await ApiService.getInstance().fetchData(`Producto/${idProducto}`);
       setProductoInfo(producto);
 
-      // Multiplica el precio por 100 para que Stripe lo interprete correctamente en centavos
       const amount = producto.Precio * 100;
       setPayableAmount(amount);
 
@@ -275,7 +265,6 @@ const DetalleProducto = () => {
     }
   };
 
-  // Función para manejar la actualización de la página
   const onRefresh = async () => {
     setRefreshing(true);
     await fetchProductoInfo();
@@ -295,7 +284,7 @@ const DetalleProducto = () => {
 
       {productoInfo === null ? (
         <View className="flex-1 justify-center items-center">
-          <ActivityIndicator size="large" color="#3ba4f6" />
+          <ActivityIndicator size={36} color="#3ba4f6" />
         </View>
       ) : (
         <ScrollView
@@ -304,7 +293,6 @@ const DetalleProducto = () => {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         >
-          {/* Contenedor para la imagen y el ícono de favoritos */}
           <View className="relative items-center mb-4">
             <Image
               source={{ uri: productoInfo.Imagen }}
@@ -325,21 +313,18 @@ const DetalleProducto = () => {
             </StyledPressable>
           </View>
 
-          {/* Nombre y precio del producto */}
           <View className="mb-4 flex-row justify-between items-center">
             <Textito className="text-2xl font-bold text-[#223263] mb-2">
               {productoInfo.NameProducto}
             </Textito>
           </View>
 
-          {/* Precio */}
           <View className="mb-4">
             <Textito className="text-2xl text-[#3ba4f6] font-bold mb-2">
               ${productoInfo.Precio.toFixed(2)}
             </Textito>
           </View>
 
-          {/* Existencias */}
           <View className="mb-4">
             <Textito className="text-lg text-[#3ba4f6] font-bold mb-2">
               <Textito className="text-lg text-[#223263] font-bold">Cantidad: </Textito>
@@ -352,7 +337,6 @@ const DetalleProducto = () => {
             </Textito>
           </View>
 
-          {/* Descripción */}
           <View className="mb-4">
             <Textito className="text-lg font-bold text-[#223263] mb-1">Descripción</Textito>
             <Textito className="text-base text-[#223263]/70">
@@ -361,7 +345,6 @@ const DetalleProducto = () => {
           </View>
 
           <View className="p-4 bg-white">
-            {/* Características del producto */}
             <AnimatedSection
               title="Características"
               content={`- ${productoInfo.Caracteristicas || "Información no disponible"}`}
@@ -369,7 +352,6 @@ const DetalleProducto = () => {
               toggleExpanded={() => setShowCaracteristicas(!showCaracteristicas)}
             />
 
-            {/* Sección de categoría */}
             <AnimatedSection
               title="Categoría"
               content={productoInfo.Categoria || "Sin categoría"}
@@ -377,7 +359,6 @@ const DetalleProducto = () => {
               toggleExpanded={() => setShowCategoria(!showCategoria)}
             />
 
-            {/* ¿Qué incluye? */}
             <AnimatedSection
               title="¿Qué incluye?"
               content={productoInfo.Incluye || "Detalles no especificados"}
@@ -386,7 +367,6 @@ const DetalleProducto = () => {
             />
           </View>
 
-          {/* Recomendaciones */}
           <View className="mb-4">
             <Textito className="text-lg font-bold text-[#223263] my-2">También puede interesarte</Textito>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -394,7 +374,6 @@ const DetalleProducto = () => {
                 <StyledPressable
                   key={index}
                   onPress={() => {
-                    // Navega a la vista de detalles del producto relacionado
                     router.push(`producto/${relacionado._id}`);
                   }}
                   className="w-40 bg-white border border-gray-200 rounded-lg shadow-sm m-2 p-2"
@@ -411,7 +390,6 @@ const DetalleProducto = () => {
             </ScrollView>
           </View>
 
-          {/* Botón de pagar con Stripe*/}
           <StyledPressable
             className="bg-[#3ba4f6] py-4 rounded-lg items-center mb-4 active:opacity-50 active:scale-95"
             onPress={openPaymentSheet}
@@ -420,7 +398,6 @@ const DetalleProducto = () => {
             <Textito className="text-white text-lg font-bold">Comprar ahora</Textito>
           </StyledPressable>
 
-          {/* Botón para agregar al carrito*/}
           <StyledPressable
             className="bg-[#4db4b2] py-4 rounded-lg items-center mb-10 active:opacity-50 active:scale-95 flex-row justify-center"
             onPress={handleAddToCart}

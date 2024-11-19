@@ -37,7 +37,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
     
   unit-test:
     name: Pruebas Unitarias
@@ -47,7 +47,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "16.x"
-      - run: npm install
+      - run: npm install --legacy-peer-deps
       - run: npm run test
 
   e2e-test:
@@ -58,7 +58,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "16.x"
-      - run: npm install
+      - run: npm install --legacy-peer-deps
 
       - name: Start the server
         run: npm start &

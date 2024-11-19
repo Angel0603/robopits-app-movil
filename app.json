@@ -7,11 +7,15 @@
     "icon": "./assets/icono-app.png",
     "userInterfaceStyle": "light",
     "scheme": ["robopitsapp"],
+      "newArchEnabled": true,
     "splash": {
       "image": "./assets/logo-robopits.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
+    "assetBundlePatterns": [
+      "assets/fonts/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -27,7 +31,8 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      "expo-image-picker"
     ],
     "extra": {
       "eas": {

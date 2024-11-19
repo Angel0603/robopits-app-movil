@@ -2,7 +2,10 @@ import { ScrollView, View, Pressable } from 'react-native';
 import React from 'react';
 import { styled } from 'nativewind';
 import { Link } from 'expo-router';
-import { ArduinoIcon, BotonIcon, CablesIcon, CajasOrganizadorasIcon, HerramientasIcon, LCDIcon, ModulosIcon, MotoresIcon, ProtoboardIcon, SensorIcon } from '../components/Icons.jsx';
+import {
+  ArduinoIcon, BotonIcon, CablesIcon, CajasOrganizadorasIcon, HerramientasIcon,
+  LCDIcon, ModulosIcon, MotoresIcon, ProtoboardIcon, SensorIcon
+} from '../components/Icons.jsx';
 import Textito from './Textito.jsx';
 
 const StyledPressable = styled(Pressable);
@@ -20,16 +23,23 @@ const categoryIcons = {
   "Herramientas": HerramientasIcon,
 };
 
-const CategoriaScrollView = ({ categorias }) => {
+const CategoriaScrollView = ({ categorias = [] }) => {
   const firstTenCategories = categorias.length > 10 ? categorias.slice(0, 10) : categorias;
 
   return (
     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full">
       <View className="flex-row">
         {firstTenCategories.map((categoria) => {
-          // Determinar el icono basado en el nombre de la categoría
-          const Icon = categoryIcons[categoria.NameCategoria] || ProtoboardIcon; // Default Icon if none matched
-          
+          if (!categoria._id || !categoria.NameCategoria) {
+            console.warn("Categoría inválida:", categoria);
+            return null; // Evitar renderizar categorías inválidas
+          }
+
+          const Icon = categoryIcons[categoria.NameCategoria] || ProtoboardIcon;
+          if (!categoryIcons[categoria.NameCategoria]) {
+            console.warn(`No se encontró un ícono para la categoría: ${categoria.NameCategoria}`);
+          }
+
           return (
             <Link key={categoria._id} href={`categoria/${categoria._id}`} asChild>
               <StyledPressable className="flex-column items-center">
