@@ -30,7 +30,7 @@ jobs:
 
       # 4. Construcción para Android
       - name: Build APK for Android
-        run: npx eas-cli build --platform android --profile preview --non-interactive
+        run: eas-cli build --platform android
         env:
           EXPO_TOKEN: ${{ secrets.MOVIL_APP_API_URL }}  # Asegúrate de configurar EXPO_TOKEN en GitHub Secrets.
   
@@ -68,7 +68,7 @@ jobs:
             }'
 
         env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          EXPO_TOKEN: ${{ secrets.MOVIL_APP_API_URL }}
           IMAGE_PATH: ".github/workflows/robopits.png"
           WEB_SERVICE_URL: "https://labarbada.store/subirImagen.php"
           API_URL: "https://api-admin-six.vercel.app/api/guardar-datos"  # Cambia por la URL de tu API
