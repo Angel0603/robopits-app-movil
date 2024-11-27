@@ -6,6 +6,15 @@ import { useEffect, useState } from 'react'
 import LoadingSpinner from '../components/LoadingSpinner.jsx'
 import ApiService from '../lib/ApiService.js'
 import FlashMessage from "react-native-flash-message";
+import * as Sentry from "@sentry/react-native";
+import Constants from 'expo-constants';
+
+Sentry.init({
+  dsn: "https://07b253014d3961547a45c9e89b26e692@o4508368886366208.ingest.us.sentry.io/4508368889184256",
+  tracesSampleRate: 1.0,
+  debug: true,
+  release: Constants.expoConfig?.version,
+});
 
 const RootLayout = () => {
   const [publishableKey, setPublishableKey] = useState('');
@@ -146,5 +155,4 @@ const RootLayout = () => {
   )
 }
 
-export default RootLayout
-
+export default Sentry.wrap(RootLayout);
