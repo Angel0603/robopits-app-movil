@@ -1,0 +1,74 @@
+name: Movil CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - develop           # Pruebas internas
+      - 'feature/*'       # Ramas de características de programadores
+      - main              # Solo pruebas y compilación
+  pull_request:
+    branches:
+      - develop           # Validación de cambios antes de fusionar en desarrollo
+      - main              # Validación de cambios antes de fusionar en producción
+  workflow_dispatch:      # Activación manual opcional
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      MOVIL_APP_API_URL: ${{ secrets.MOVIL_APP_API_URL }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm install
+    
+  unit-test:
+    name: Pruebas Unitarias
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+      - run: npm install
+      - run: npm run test
+
+  e2e-test:
+    name: Pruebas E2E
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+      - run: npm install
+
+      - name: Start the server
+        run: npm start &
+        env:
+          PORT: 8081  # Cambia esto si tu aplicación usa otro puerto
+
+      - name: Wait for server to be ready
+        run: npx wait-on http://localhost:8081  # Espera hasta que el servidor esté listo antes de ejecutar Cypress
+
+      - name: Run Cypress tests
+        run: npx cypress run
+        env:
+          CYPRESS_baseUrl: http://localhost:8081  # Cambia la URL base si es necesario
