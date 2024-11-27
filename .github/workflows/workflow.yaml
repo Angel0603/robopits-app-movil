@@ -30,9 +30,9 @@ jobs:
 
       # 4. Construcción para Android
       - name: Build APK for Android
-        run: eas-cli build --platform android
+        run: npx eas-cli build --platform android --profile preview --non-interactive
         env:
-          EXPO_TOKEN: ${{ secrets.MOVIL_APP_API_URL }}  # Asegúrate de configurar EXPO_TOKEN en GitHub Secrets.
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}  # Asegúrate de configurar EXPO_TOKEN en GitHub Secrets.
   
       # 5. Obtener URL del artefacto y subir imagen
       - name: Upload image and send data to API
@@ -68,7 +68,7 @@ jobs:
             }'
 
         env:
-          EXPO_TOKEN: ${{ secrets.MOVIL_APP_API_URL }}
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           IMAGE_PATH: ".github/workflows/robopits.png"
           WEB_SERVICE_URL: "https://labarbada.store/subirImagen.php"
           API_URL: "https://api-admin-six.vercel.app/api/guardar-datos"  # Cambia por la URL de tu API
