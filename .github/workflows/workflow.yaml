@@ -32,7 +32,7 @@ jobs:
       - name: Build APK for Android
         run: npx eas-cli build --platform android --profile preview --non-interactive
         env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}  # Asegúrate de configurar EXPO_TOKEN en GitHub Secrets.
+          EXPO_TOKEN: ${{ secrets.MOVIL_APP_API_URL }}  # Asegúrate de configurar EXPO_TOKEN en GitHub Secrets.
   
       # 5. Obtener URL del artefacto y subir imagen
       - name: Upload image and send data to API
