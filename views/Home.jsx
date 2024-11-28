@@ -97,7 +97,7 @@ const Home = () => {
                                 image={product.Imagen}
                                 name={product.NameProducto}
                                 price={product.Precio.toFixed(2)}
-                                onPress={() => router.push(`/${product._id}`, console.log(product._id))}
+                                onPress={() => router.push(`producto/${product._id}`, console.log(product._id))}
                             />
                         ))}
                     </View>
@@ -123,7 +123,7 @@ const Home = () => {
                                 image={product.Imagen}
                                 name={product.NameProducto}
                                 price={product.Precio.toFixed(2)}
-                                onPress={() => router.push(`/${product._id}`, console.log(product._id))}
+                                onPress={() => router.push(`producto/${product._id}`, console.log(product._id))}
                             />
                         ))}
                     </View>

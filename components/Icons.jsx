@@ -12,6 +12,7 @@ export const UserIcon = (props) => <MaterialCommunityIcons name="account-outline
 /* Iconos para los Tabs */
 export const HomeIcon = (props) => <MaterialCommunityIcons name="home-outline" size={24} color="#9098B1" {...props} />
 export const SearchIcon = (props) => <Ionicons name="search" size={24} color="#3BA4F6" {...props} />
+export const LimpiarIcon = (props) => <MaterialCommunityIcons name="close-box-outline" size={24} color="#3BA4F6" {...props} />
 export const CartIcon = (props) => <MaterialCommunityIcons name="cart-outline" size={24} color="#9098B1" {...props} />
 export const HeartIcon = ({ color, filled, props }) => <MaterialCommunityIcons name={filled ? "heart" : "heart-outline"} size={24} color={color} {...props} />
 export const TagIcon = (props) => <MaterialCommunityIcons name="tag-outline" size={24} color="#9098B1" {...props} />
@@ -41,3 +42,8 @@ export const CerrarSesionIcon = (props) => <MaterialCommunityIcons name="exit-to
 /* Iconos Detalle Producto */
 export const PlusIcon = (props) => <MaterialCommunityIcons name="plus-circle-outline" size={24} color="#9098B1" {...props} />
 export const MinusIcon = (props) => <MaterialCommunityIcons name="minus-circle-outline" size={24} color="#9098B1" {...props} />
+
+/* Iconos Carrito */
+export const DeleteIcon = (props) => <MaterialCommunityIcons name="delete-circle" size={24} color="#9098B1" {...props} />
+export const IncrementIcon = (props) => <MaterialCommunityIcons name="plus-circle" size={24} color="#9098B1" {...props} />
+export const DecrementIcon = (props) => <MaterialCommunityIcons name="minus-circle" size={24} color="#9098B1" {...props} />

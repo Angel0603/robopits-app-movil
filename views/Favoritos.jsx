@@ -6,6 +6,7 @@ import Textito from '../components/Textito';
 import { useRouter } from 'expo-router';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { styled } from 'nativewind';
+import { showMessage } from "react-native-flash-message";
 
 const StyledPressable = styled(Pressable);
 
@@ -24,6 +25,11 @@ const Favoritos = () => {
       }
     } catch (error) {
       console.error("Error fetching favoritos:", error);
+      showMessage({
+        message: "Error",
+        description: "No se pudo cargar la lista de favoritos.",
+        type: "danger",
+      });
     }
   };
 
@@ -49,6 +55,11 @@ const Favoritos = () => {
           body: JSON.stringify({ userId, productoId: productId }),
         });
         setFavoritos((prev) => prev.filter((producto) => producto._id !== productId));
+        showMessage({
+          message: "Eliminado de Favoritos",
+          description: "El producto fue eliminado de tus favoritos.",
+          type: "warning",
+        });
       } else {
         // Si no está en favoritos, agregarlo
         await ApiService.getInstance().fetchData('favoritos/agregar', {
@@ -56,9 +67,19 @@ const Favoritos = () => {
           body: JSON.stringify({ userId, productoId: productId }),
         });
         fetchFavoritos(); // Actualiza la lista de favoritos
+        showMessage({
+          message: "Agregado a Favoritos",
+          description: "El producto fue agregado a tus favoritos.",
+          type: "success",
+        });
       }
     } catch (error) {
       console.error("Error al cambiar estado de favoritos:", error);
+      showMessage({
+        message: "Error",
+        description: "No se pudo cambiar el estado de favoritos.",
+        type: "danger",
+      });
     }
   };
 
@@ -87,7 +108,7 @@ const Favoritos = () => {
         </View>
       ) : (
         favoritos.map((producto, index) => (
-          <StyledPressable key={index} onPress={() => router.push(`/${producto._id}`)}>
+          <StyledPressable key={index} onPress={() => router.push(`producto/${producto._id}`)}>
             <View className="bg-white p-4 rounded-lg shadow mb-4">
               {/* Contenedor de imagen con ícono de favoritos */}
               <View className="relative">

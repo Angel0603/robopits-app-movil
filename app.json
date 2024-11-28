@@ -1,17 +1,23 @@
 {
   "expo": {
     "name": "robopits-app",
-    "slug": "robopits-app",
+    "slug": "robopits-app-pa0oqnaapiikobrgnoi9j",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icono-app.png",
     "userInterfaceStyle": "light",
-    "scheme": ["robopitsapp"],
+    "scheme": [
+      "robopitsapp"
+    ],
+    "newArchEnabled": true,
     "splash": {
       "image": "./assets/logo-robopits.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
+    "assetBundlePatterns": [
+      "assets/fonts/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -27,12 +33,24 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      [
+        "@sentry/react-native",
+        {
+          "url": "https://sentry.io/",
+          "project": "react-native",
+          "organization": "angel-lara"
+        }
+      ]
     ],
     "extra": {
       "eas": {
-        "projectId": "a61edb05-35b6-4f82-a7ee-ae7bf5213a9c"
+        "projectId": "9961ac34-719b-475e-ad91-a9107973e678"
+      },
+      "router": {
+        "origin": false
       }
-    }
+    },
+    "owner": "angel06"
   }
 }
