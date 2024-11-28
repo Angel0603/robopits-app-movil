@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "robopits-app",
-    "slug": "robopits-app",
+    "slug": "robopits-app-pa0oqnaapiikobrgnoi9j",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icono-app.png",
@@ -45,8 +45,12 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "a61edb05-35b6-4f82-a7ee-ae7bf5213a9c"
+        "projectId": "9961ac34-719b-475e-ad91-a9107973e678"
+      },
+      "router": {
+        "origin": false
       }
-    }
+    },
+    "owner": "angel06"
   }
 }

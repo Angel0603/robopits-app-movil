@@ -90,7 +90,7 @@ const SearchBar = () => {
                                     placeholder="Buscar un producto en RoboPits"
                                     style={{
                                         flex: 1,
-                                        height: 30,
+                                        height: 40,
                                         marginLeft: 8,
                                         fontFamily: 'Poppins',
                                         fontSize: 14,

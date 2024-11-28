@@ -12,10 +12,6 @@ import { showMessage } from "react-native-flash-message";
 
 const StyledPressable = styled(Pressable);
 
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
-
 const AnimatedSection = ({ title, content, expanded, toggleExpanded }) => {
   const animatedHeight = useRef(new Animated.Value(0)).current;
 

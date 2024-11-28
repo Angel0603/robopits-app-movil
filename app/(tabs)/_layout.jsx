@@ -1,12 +1,9 @@
 import { HeartIcon, HomeIcon, MenuIcon, PedidosIcon, TagIcon } from '../../components/Icons'
 import { Tabs } from 'expo-router'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
-
 import Header from '../../components/Header';
 
 const RootLayout = () => {
     return (
-        <SafeAreaProvider>
             <Tabs
                 screenOptions={{
                     headerShown: false,
@@ -77,8 +74,6 @@ const RootLayout = () => {
                     }}
                 />
             </Tabs>
-
-        </SafeAreaProvider>
     )
 }
 
